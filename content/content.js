@@ -12,12 +12,15 @@
   let collectedPosts = [];
   const collectedIds = new Set();
   let purePostsOnly = false;
-  let isPaused = false;
+  let isPaused = true;
+  let isCollecting = false;
   let panelEl = null;
   let countEl = null;
   let downloadBtn = null;
+  let startBtn = null;
   let errorEl = null;
   let throttleTimer = null;
+  let mutationObserver = null;
   const THROTTLE_MS = 800;
 
   function isThreadsPage() {
@@ -361,6 +364,7 @@
           <input type="checkbox" id="ts-pure-only" class="ts-checkbox" />
           <span class="ts-toggle-label">純粋ポストのみ収集</span>
         </label>
+        <button type="button" class="ts-btn ts-btn-start" id="ts-start">▶ スタート</button>
         <div class="ts-count" id="ts-count">収集: 0 件</div>
         <div class="ts-error" id="ts-error" style="display:none;"></div>
         <button type="button" class="ts-btn ts-btn-clear" id="ts-clear">データをクリア</button>
@@ -372,6 +376,7 @@
     countEl = document.getElementById('ts-count');
     errorEl = document.getElementById('ts-error');
     downloadBtn = document.getElementById('ts-download');
+    startBtn = document.getElementById('ts-start');
 
     const pureCheck = document.getElementById('ts-pure-only');
     pureCheck.checked = purePostsOnly;
@@ -379,15 +384,24 @@
       purePostsOnly = pureCheck.checked;
     });
 
+    startBtn.addEventListener('click', () => {
+      if (isCollecting) {
+        stopCollecting();
+      } else {
+        startCollecting();
+      }
+    });
+
     document.getElementById('ts-clear').addEventListener('click', () => {
-      isPaused = true;
+      stopCollecting();
       collectedPosts = [];
       collectedIds.clear();
-      // data-ts-processed はそのまま残す（既存ポストを再収集しない）
+      // data-ts-processed をリセット（スタートからやり直すため）
+      document.querySelectorAll('[data-ts-processed]').forEach(el => {
+        el.removeAttribute('data-ts-processed');
+      });
       clearDownloadError();
       updateCount();
-      // MutationObserverの発火を避けるため、次のマイクロタスクで再開
-      setTimeout(() => { isPaused = false; }, 100);
     });
 
     document.getElementById('ts-download').addEventListener('click', () => {
@@ -395,18 +409,50 @@
     });
   }
 
-  function observeMutations() {
-    const observer = new MutationObserver(() => runScanThrottled());
-    observer.observe(document.body, { childList: true, subtree: true });
+  function startCollecting() {
+    if (isCollecting) return;
+    isCollecting = true;
+    isPaused = false;
+    if (startBtn) {
+      startBtn.textContent = '⏹ ストップ';
+      startBtn.classList.add('ts-btn-stop');
+      startBtn.classList.remove('ts-btn-start');
+    }
+    // スクロール監視を開始
+    window.addEventListener('scroll', runScanThrottled, { passive: true });
+    // DOM変更の監視を開始
+    mutationObserver = new MutationObserver(() => runScanThrottled());
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+    // 現在表示されている投稿をスキャン
+    scanAndCollect();
+  }
+
+  function stopCollecting() {
+    if (!isCollecting) return;
+    isCollecting = false;
+    isPaused = true;
+    if (startBtn) {
+      startBtn.textContent = '▶ スタート';
+      startBtn.classList.remove('ts-btn-stop');
+      startBtn.classList.add('ts-btn-start');
+    }
+    // スクロール監視を停止
+    window.removeEventListener('scroll', runScanThrottled);
+    // DOM変更の監視を停止
+    if (mutationObserver) {
+      mutationObserver.disconnect();
+      mutationObserver = null;
+    }
+    if (throttleTimer) {
+      clearTimeout(throttleTimer);
+      throttleTimer = null;
+    }
   }
 
   function init() {
     if (!isThreadsPage()) return;
     createPanel();
     updateCount();
-    scanAndCollect();
-    window.addEventListener('scroll', runScanThrottled, { passive: true });
-    observeMutations();
   }
 
   if (document.readyState === 'loading') {

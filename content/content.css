@@ -99,3 +99,23 @@
   cursor: not-allowed;
   opacity: 0.8;
 }
+
+.ts-btn-start {
+  background: #30d158;
+  color: #fff;
+  font-size: 14px;
+}
+
+.ts-btn-start:hover {
+  background: #34c759;
+}
+
+.ts-btn-stop {
+  background: #ff453a;
+  color: #fff;
+  font-size: 14px;
+}
+
+.ts-btn-stop:hover {
+  background: #ff6961;
+}

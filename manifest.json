@@ -6,7 +6,7 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Threadsのポストをスクロールで収集し、CSVでダウンロード。純粋ポストのみの検索に対応。",
   "permissions": ["downloads","storage","tabs","scripting"],
   "background": { "service_worker": "background.js" },
