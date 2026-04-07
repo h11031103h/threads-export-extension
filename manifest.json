@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "すれっしゅ",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "version": "1.0.3",
+  "description": "Threadsのポストをスクロールで収集し、CSVでダウンロード。純粋ポストのみの検索に対応。",
+  "permissions": ["downloads","storage","tabs","scripting"],
+  "background": { "service_worker": "background.js" },
+  "host_permissions": [
+    "https://www.threads.net/*",
+    "https://threads.net/*",
+    "https://www.threads.com/*",
+    "https://threads.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.threads.net/*",
+        "https://threads.net/*",
+        "https://www.threads.com/*",
+        "https://threads.com/*"
+      ],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "すれっしゅ"
+  }
+}
