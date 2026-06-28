@@ -31,19 +31,22 @@ async function fetchImpressionsFromTab(postUrl) {
     tab = await chrome.tabs.create({ url: postUrl, active: false });
 
     // ページが完全にロードされるまで待つ
-    await waitForTabLoad(tab.id, 20000);
+    await waitForTabLoad(tab.id, 8000);
 
     // ページが描画されるまで追加で待つ
-    await sleep(3000);
+    await sleep(1200);
 
-    // スクリプトを注入して表示回数を取得
-    const results = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: extractViewCount,
-    });
-
-    const count = results && results[0] && results[0].result ? results[0].result : '';
-    return count;
+    // スクリプト注入を数回リトライ（描画遅延に対応）
+    for (let i = 0; i < 3; i++) {
+      const results = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: extractViewCount,
+      });
+      const count = results && results[0] && results[0].result ? results[0].result : '';
+      if (count) return count;
+      await sleep(800);
+    }
+    return '';
   } catch (e) {
     return '';
   } finally {

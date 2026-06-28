@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>すれっしゅ GitHubリンク受け取り設定マニュアル</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.75;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 24px;
+      color: #202124;
+    }
+    h1 { border-bottom: 3px solid #202124; padding-bottom: 12px; }
+    h2 { border-bottom: 1px solid #ddd; padding-bottom: 6px; margin-top: 36px; }
+    pre { background: #f6f8fa; padding: 12px; overflow: auto; border-radius: 6px; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+    th, td { border: 1px solid #ccc; padding: 8px 10px; vertical-align: top; }
+    th { background: #f3f4f6; }
+  </style>
+</head>
+<body>
+  <h1>すれっしゅ GitHubリンク受け取り設定マニュアル</h1>
+  <p>このマニュアルは、Chrome Web Storeには公開せず、GitHubの公開リンクから <strong>すれっしゅ</strong> を受け取って使うための手順です。</p>
+  <p>最終更新日: 2026-06-28</p>
+
+  <h2>1. 受け取り用リンク</h2>
+  <p>GitHub公開ページ:</p>
+  <pre><code>https://github.com/h11031103h/threads-export-extension</code></pre>
+  <p>直接ZIPをダウンロードするリンク:</p>
+  <pre><code>https://github.com/h11031103h/threads-export-extension/archive/refs/heads/main.zip</code></pre>
+
+  <h2>2. GitHubからダウンロードする</h2>
+  <ol>
+    <li>ChromeでGitHub公開ページを開く</li>
+    <li>緑色の <strong>Code</strong> ボタンを押す</li>
+    <li><strong>Download ZIP</strong> を押す</li>
+    <li><code>threads-export-extension-main.zip</code> がダウンロードされる</li>
+  </ol>
+
+  <h2>3. ZIPを解凍する</h2>
+  <ol>
+    <li>ダウンロードしたZIPを解凍する</li>
+    <li><code>threads-export-extension-main</code> フォルダを確認する</li>
+    <li>削除しない場所へ移動する</li>
+  </ol>
+
+  <h2>4. Chromeで読み込む</h2>
+  <ol>
+    <li>Chromeで <code>chrome://extensions</code> を開く</li>
+    <li>右上の <strong>デベロッパーモード</strong> をONにする</li>
+    <li><strong>パッケージ化されていない拡張機能を読み込む</strong> を押す</li>
+    <li>解凍した <code>threads-export-extension-main</code> フォルダ自体を選ぶ</li>
+    <li>一覧に <strong>すれっしゅ</strong> が表示され、ONになっていれば完了</li>
+  </ol>
+
+  <h2>5. 使い方</h2>
+  <ol>
+    <li>ChromeでThreadsにログインする</li>
+    <li>検索結果またはタイムラインを開く</li>
+    <li>すれっしゅパネルの <strong>スタート</strong> を押す</li>
+    <li>収集したい範囲までスクロールする</li>
+    <li><strong>Download CSV</strong> を押してCSVを保存する</li>
+  </ol>
+
+  <h2>6. 更新版を受け取る場合</h2>
+  <ol>
+    <li>GitHubページを開く</li>
+    <li><strong>Code → Download ZIP</strong> で新しいZIPをダウンロードする</li>
+    <li>ZIPを解凍する</li>
+    <li>古いフォルダを新しいフォルダで置き換える</li>
+    <li><code>chrome://extensions</code> で <strong>すれっしゅ</strong> の <strong>更新</strong> を押す</li>
+    <li>Threadsを開き直す</li>
+  </ol>
+
+  <h2>7. トラブルシューティング</h2>
+  <table>
+    <tr><th>症状</th><th>確認すること</th></tr>
+    <tr><td>GitHubページが見られない</td><td>リンク、リポジトリ公開状態、ネットワーク制限を確認する</td></tr>
+    <tr><td>Chromeに読み込めない</td><td>ZIPを解凍済みか、manifest.jsonがフォルダ直下にあるか確認する</td></tr>
+    <tr><td>パネルが表示されない</td><td>ThreadsのURL、拡張機能がONか、フォルダを移動していないかを確認する</td></tr>
+    <tr><td>収集: 0件のまま</td><td>スタートを押したか、ページをスクロールしたかを確認する</td></tr>
+  </table>
+</body>
+</html>
